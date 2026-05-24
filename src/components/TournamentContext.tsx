@@ -74,8 +74,9 @@ interface TournamentContextType {
   updateMatch: (id: string, updates: Partial<Match>) => void;
   removeMatch: (id: string) => void;
   isAdmin: boolean;
-  login: (password: string) => boolean;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signup: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
   liveLink: string;
   updateLiveLink: (url: string) => void;
   highlightsLink: string;
@@ -114,6 +115,7 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
       if (dbPlayers) setPlayers(dbPlayers as Player[]);
       if (dbStandings) setStandings(dbStandings as Standing[]);
       if (dbRawMatches) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const parsedMatches = dbRawMatches.map((m: any) => {
           const { possessionHome, possessionAway, shotsHome, shotsAway, foulsHome, foulsAway, ...rest } = m;
           const stats = possessionHome !== null ? { possessionHome, possessionAway, shotsHome, shotsAway, foulsHome, foulsAway } : undefined;
@@ -130,6 +132,20 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
       }
     };
     loadData();
+  }, [supabase]);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAdmin(!!session);
+    });
+    
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAdmin(!!session);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [supabase]);
 
   // Settings
@@ -198,14 +214,21 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
   };
 
   // Auth
-  const login = (password: string) => {
-    if (password === 'admin') {
-      setIsAdmin(true);
-      return true;
-    }
-    return false;
+  const login = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) return { success: false, error: error.message };
+    return { success: true };
   };
-  const logout = () => setIsAdmin(false);
+
+  const signup = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  };
+
+  const logout = async () => {
+    await supabase.auth.signOut();
+  };
 
   return (
     <TournamentContext.Provider value={{ 
@@ -215,7 +238,7 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
       updateStanding,
       addMatch, updateMatch, removeMatch,
       addPhoto, removePhoto,
-      isAdmin, login, logout,
+      isAdmin, login, signup, logout,
       liveLink, updateLiveLink,
       highlightsLink, updateHighlightsLink
     }}>

@@ -431,7 +431,7 @@ function GalleryEditor() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '24px' }}>
         {photos.map(photo => (
           <div key={photo.id} style={{ display: 'flex', flexDirection: 'column', background: 'var(--surface-container-high)', border: '1px solid var(--outline-variant)' }}>
-            <img src={photo.url} alt={photo.caption} style={{ width: '100%', height: '180px', objectFit: 'cover' }} />
+            <img src={photo.url} alt={photo.caption || undefined} style={{ width: '100%', height: '180px', objectFit: 'cover' }} />
             <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '16px', flex: 1, justifyContent: 'space-between' }}>
               <span className="body-md" style={{ color: 'var(--on-surface)' }}>{photo.caption || 'No caption'}</span>
               <button 
