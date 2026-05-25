@@ -34,10 +34,10 @@ export default function Standings() {
       </section>
 
       {/* Standings Bento Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
+      <div className="grid">
         
         {/* Main Leaderboard */}
-        <div style={{ gridColumn: 'span 2', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+        <div className="bento-col-8" style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }}>
           <div style={{ background: 'var(--surface-container)', padding: '24px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h2 className="headline-md" style={{ color: 'var(--on-surface)', textTransform: 'uppercase' }}>Current Table</h2>
             <span style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--tertiary)' }}>
@@ -96,7 +96,7 @@ export default function Standings() {
         </div>
 
         {/* Stats Sidebar */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+        <div className="bento-col-4" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
           
           {/* Top Scorer Card */}
           <div style={{ background: 'var(--surface-container)', border: '1px solid rgba(255,255,255,0.1)', padding: '32px', position: 'relative', overflow: 'hidden' }}>

@@ -46,8 +46,8 @@ export default function Fixtures() {
               if (!homeTeam || !awayTeam) return null;
 
               return (
-                <div key={liveMatch.id} className="card" style={{ borderLeft: '4px solid var(--tertiary)', background: 'rgba(255, 255, 255, 0.03)', padding: '24px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '32px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', minWidth: '120px' }}>
+                <div key={liveMatch.id} className="card match-card" style={{ borderLeft: '4px solid var(--tertiary)', background: 'rgba(255, 255, 255, 0.03)', padding: '24px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <span className="label-caps" style={{ background: 'var(--tertiary)', color: 'var(--on-tertiary)', padding: '4px 12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span className="live-dot" style={{ width: '8px', height: '8px', background: 'var(--on-tertiary)', borderRadius: '50%' }}></span>
                       LIVE
@@ -55,8 +55,8 @@ export default function Fixtures() {
                     <span className="stats-md" style={{ color: 'var(--on-surface-variant)' }}>{liveMatch.time}</span>
                   </div>
                   
-                  <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', gap: '48px', minWidth: '300px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1, justifyContent: 'flex-end' }}>
+                  <div className="match-teams">
+                    <div className="match-team home">
                       <span className="headline-md" style={{ textTransform: 'uppercase', fontSize: '24px' }}>{homeTeam.name}</span>
                       <img src={homeTeam.img} alt={homeTeam.name} style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
                     </div>
@@ -65,13 +65,13 @@ export default function Fixtures() {
                       <span className="stats-xl" style={{ color: 'var(--outline-variant)' }}>—</span>
                       <span className="stats-xl" style={{ color: 'var(--primary)' }}>{liveMatch.awayScore}</span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1, justifyContent: 'flex-start' }}>
+                    <div className="match-team away">
                       <img src={awayTeam.img} alt={awayTeam.name} style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
                       <span className="headline-md" style={{ textTransform: 'uppercase', fontSize: '24px' }}>{awayTeam.name}</span>
                     </div>
                   </div>
                   
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px', minWidth: '200px' }}>
+                  <div className="match-info-side">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--on-surface-variant)' }}>
                       <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>location_on</span>
                       <span className="label-caps">{liveMatch.venue}</span>
@@ -89,27 +89,27 @@ export default function Fixtures() {
               if (!homeTeam || !awayTeam) return null;
 
               return (
-                <div key={upcomingMatch.id} className="card" style={{ background: 'var(--surface-container-low)', padding: '24px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '32px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', minWidth: '120px' }}>
+                <div key={upcomingMatch.id} className="card match-card" style={{ background: 'var(--surface-container-low)', padding: '24px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <span className="label-caps" style={{ border: '1px solid var(--outline-variant)', color: 'var(--on-surface-variant)', padding: '4px 12px' }}>UPCOMING</span>
                     <span className="stats-md" style={{ color: 'var(--on-surface)' }}>{upcomingMatch.time}</span>
                   </div>
                   
-                  <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', gap: '48px', minWidth: '300px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1, justifyContent: 'flex-end' }}>
+                  <div className="match-teams">
+                    <div className="match-team home">
                       <span className="headline-md" style={{ textTransform: 'uppercase', fontSize: '24px' }}>{homeTeam.name}</span>
                       <img src={homeTeam.img} alt={homeTeam.name} style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
                     </div>
                     <div style={{ background: 'var(--surface-container-highest)', padding: '8px 24px' }}>
                       <span className="stats-md" style={{ color: 'var(--on-surface-variant)' }}>VS</span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1, justifyContent: 'flex-start' }}>
+                    <div className="match-team away">
                       <img src={awayTeam.img} alt={awayTeam.name} style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
                       <span className="headline-md" style={{ textTransform: 'uppercase', fontSize: '24px' }}>{awayTeam.name}</span>
                     </div>
                   </div>
                   
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px', minWidth: '200px' }}>
+                  <div className="match-info-side">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--on-surface-variant)' }}>
                       <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>location_on</span>
                       <span className="label-caps">{upcomingMatch.venue}</span>

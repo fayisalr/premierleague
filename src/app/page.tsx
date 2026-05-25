@@ -88,8 +88,7 @@ export default function Home() {
         <div className="grid">
           
           {/* FEATURED HIGHLIGHTS (Bento Large) */}
-          <div className="card" style={{ 
-            gridColumn: 'span 8', 
+          <div className="card bento-col-8" style={{ 
             position: 'relative', 
             padding: 0, 
             height: '500px', 
@@ -128,7 +127,7 @@ export default function Home() {
           </div>
 
           {/* TOP SCORERS (Bento Tall) */}
-          <div className="card" style={{ gridColumn: 'span 4', display: 'flex', flexDirection: 'column' }}>
+          <div className="card bento-col-4" style={{ display: 'flex', flexDirection: 'column' }}>
             <h3 className="headline-md" style={{ color: 'var(--primary)', borderBottom: '1px solid var(--outline-variant)', paddingBottom: '16px', marginBottom: '32px' }}>TOP STRIKERS</h3>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', flex: 1 }}>
@@ -165,7 +164,7 @@ export default function Home() {
 
           {/* LIVE STATS CENTER (Bento Medium) */}
           {liveMatch && liveHomeTeam && liveAwayTeam ? (
-            <div className="card" style={{ gridColumn: 'span 6', background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(12px)', borderColor: 'rgba(172, 207, 179, 0.2)' }}>
+            <div className="card bento-col-6" style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(12px)', borderColor: 'rgba(172, 207, 179, 0.2)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '48px' }}>
                 <div>
                   <span className="label-caps" style={{ color: 'var(--secondary)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
@@ -206,13 +205,13 @@ export default function Home() {
               </div>
             </div>
           ) : (
-            <div className="card" style={{ gridColumn: 'span 6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div className="card bento-col-6" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                <h3 className="headline-md" style={{ color: 'var(--on-surface-variant)' }}>NO LIVE MATCHES</h3>
             </div>
           )}
 
           {/* UPCOMING FIXTURE (Bento Small) */}
-          <div className="card" style={{ gridColumn: 'span 6', background: 'var(--surface-container-high)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div className="card bento-col-6" style={{ background: 'var(--surface-container-high)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
               <h3 className="headline-md" style={{ color: 'white', marginBottom: '24px' }}>NEXT FIXTURE</h3>
               
