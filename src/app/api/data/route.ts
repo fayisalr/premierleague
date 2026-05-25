@@ -20,6 +20,9 @@ export async function GET() {
 
     const liveLink = settings.find((s: any) => s.key === 'liveLink')?.value || '';
     const highlightsLink = settings.find((s: any) => s.key === 'highlightsLink')?.value || '';
+    const nextFixtureHomeTeamId = settings.find((s: any) => s.key === 'nextFixtureHomeTeamId')?.value || 'team-3';
+    const nextFixtureAwayTeamId = settings.find((s: any) => s.key === 'nextFixtureAwayTeamId')?.value || 'team-2';
+    const nextFixtureTime = settings.find((s: any) => s.key === 'nextFixtureTime')?.value || '20:00 GMT';
 
     return NextResponse.json({
       teams,
@@ -28,7 +31,10 @@ export async function GET() {
       matches,
       photos,
       liveLink,
-      highlightsLink
+      highlightsLink,
+      nextFixtureHomeTeamId,
+      nextFixtureAwayTeamId,
+      nextFixtureTime
     });
   } catch (error) {
     console.error(error);

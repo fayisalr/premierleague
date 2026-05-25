@@ -450,12 +450,45 @@ function GalleryEditor() {
 }
 
 function SettingsEditor() {
-  const { liveLink, updateLiveLink, highlightsLink, updateHighlightsLink } = useTournament();
+  const { 
+    liveLink, updateLiveLink, 
+    highlightsLink, updateHighlightsLink,
+    teams,
+    nextFixtureHomeTeamId, updateNextFixtureHomeTeamId,
+    nextFixtureAwayTeamId, updateNextFixtureAwayTeamId,
+    nextFixtureTime, updateNextFixtureTime
+  } = useTournament();
+
   const [localLiveLink, setLocalLiveLink] = useState(liveLink);
   const [localHighlightsLink, setLocalHighlightsLink] = useState(highlightsLink);
+  const [localHomeTeamId, setLocalHomeTeamId] = useState(nextFixtureHomeTeamId);
+  const [localAwayTeamId, setLocalAwayTeamId] = useState(nextFixtureAwayTeamId);
+  const [localTime, setLocalTime] = useState(nextFixtureTime);
   
   const [liveSaved, setLiveSaved] = useState(false);
   const [highlightsSaved, setHighlightsSaved] = useState(false);
+  const [fixtureSaved, setFixtureSaved] = useState(false);
+
+  // Sync state when context values load
+  React.useEffect(() => {
+    setLocalLiveLink(liveLink);
+  }, [liveLink]);
+
+  React.useEffect(() => {
+    setLocalHighlightsLink(highlightsLink);
+  }, [highlightsLink]);
+
+  React.useEffect(() => {
+    setLocalHomeTeamId(nextFixtureHomeTeamId);
+  }, [nextFixtureHomeTeamId]);
+
+  React.useEffect(() => {
+    setLocalAwayTeamId(nextFixtureAwayTeamId);
+  }, [nextFixtureAwayTeamId]);
+
+  React.useEffect(() => {
+    setLocalTime(nextFixtureTime);
+  }, [nextFixtureTime]);
 
   const handleSaveLive = (e: React.FormEvent) => {
     e.preventDefault();
@@ -471,11 +504,81 @@ function SettingsEditor() {
     setTimeout(() => setHighlightsSaved(false), 3000);
   };
 
+  const handleSaveFixture = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateNextFixtureHomeTeamId(localHomeTeamId);
+    updateNextFixtureAwayTeamId(localAwayTeamId);
+    updateNextFixtureTime(localTime);
+    setFixtureSaved(true);
+    setTimeout(() => setFixtureSaved(false), 3000);
+  };
+
   return (
     <div>
       <h2 className="headline-md" style={{ marginBottom: '24px' }}>System Settings</h2>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         
+        {/* Next Fixture Settings */}
+        <div style={{ background: 'var(--surface-container-high)', padding: '24px', border: '1px solid var(--outline-variant)' }}>
+          <h3 className="label-caps" style={{ color: 'var(--on-surface-variant)', marginBottom: '16px' }}>Next Fixture Settings</h3>
+          <form onSubmit={handleSaveFixture} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+              
+              {/* Home Team Select */}
+              <div style={{ flex: 1, minWidth: '200px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label className="label-caps" style={{ color: 'var(--on-surface-variant)', fontSize: '10px' }}>Home Team</label>
+                <select 
+                  value={localHomeTeamId}
+                  onChange={e => { setLocalHomeTeamId(e.target.value); setFixtureSaved(false); }}
+                  style={{ width: '100%', background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '12px' }}
+                >
+                  {teams.map(t => (
+                    <option key={t.id} value={t.id}>{t.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Away Team Select */}
+              <div style={{ flex: 1, minWidth: '200px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label className="label-caps" style={{ color: 'var(--on-surface-variant)', fontSize: '10px' }}>Away Team</label>
+                <select 
+                  value={localAwayTeamId}
+                  onChange={e => { setLocalAwayTeamId(e.target.value); setFixtureSaved(false); }}
+                  style={{ width: '100%', background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '12px' }}
+                >
+                  {teams.map(t => (
+                    <option key={t.id} value={t.id}>{t.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Match Time Input */}
+              <div style={{ flex: 1, minWidth: '200px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label className="label-caps" style={{ color: 'var(--on-surface-variant)', fontSize: '10px' }}>Match Time / Details</label>
+                <input 
+                  type="text"
+                  value={localTime}
+                  onChange={e => { setLocalTime(e.target.value); setFixtureSaved(false); }}
+                  placeholder="e.g. 20:00 GMT or SUN, 18:00"
+                  style={{ width: '100%', background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '12px' }}
+                />
+              </div>
+
+            </div>
+
+            <button 
+              type="submit"
+              className="label-caps"
+              style={{ alignSelf: 'flex-start', background: fixtureSaved ? 'var(--tertiary)' : 'var(--on-tertiary)', color: fixtureSaved ? 'var(--on-tertiary)' : 'var(--on-primary)', border: 'none', padding: '12px 24px', cursor: 'pointer', whiteSpace: 'nowrap', marginTop: '8px' }}
+            >
+              {fixtureSaved ? 'Saved ✓' : 'Save Fixture Settings'}
+            </button>
+          </form>
+          <p className="body-sm" style={{ color: 'var(--on-surface-variant)', marginTop: '8px' }}>
+            Sets the Home Team, Away Team, and Time displayed on the "NEXT FIXTURE" banner on the main page.
+          </p>
+        </div>
+
         {/* Live Stream URL */}
         <div style={{ background: 'var(--surface-container-high)', padding: '24px', border: '1px solid var(--outline-variant)' }}>
           <h3 className="label-caps" style={{ color: 'var(--on-surface-variant)', marginBottom: '16px' }}>Live Stream URL</h3>

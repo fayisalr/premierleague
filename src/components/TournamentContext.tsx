@@ -83,6 +83,12 @@ interface TournamentContextType {
   updateHighlightsLink: (url: string) => void;
   addPhoto: (photo: Omit<Photo, 'id'>) => void;
   removePhoto: (id: string) => void;
+  nextFixtureHomeTeamId: string;
+  updateNextFixtureHomeTeamId: (id: string) => void;
+  nextFixtureAwayTeamId: string;
+  updateNextFixtureAwayTeamId: (id: string) => void;
+  nextFixtureTime: string;
+  updateNextFixtureTime: (time: string) => void;
 }
 
 const TournamentContext = createContext<TournamentContextType | undefined>(undefined);
@@ -97,6 +103,9 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [liveLink, setLiveLink] = useState('');
   const [highlightsLink, setHighlightsLink] = useState('');
+  const [nextFixtureHomeTeamId, setNextFixtureHomeTeamId] = useState('team-3');
+  const [nextFixtureAwayTeamId, setNextFixtureAwayTeamId] = useState('team-2');
+  const [nextFixtureTime, setNextFixtureTime] = useState('20:00 GMT');
 
   const supabase = createClient();
 
@@ -145,6 +154,12 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
             const high = dbSettings.find(s => s.key === 'highlightsLink')?.value || '';
             setLiveLink(live);
             setHighlightsLink(high);
+            const home = dbSettings.find(s => s.key === 'nextFixtureHomeTeamId')?.value || 'team-3';
+            const away = dbSettings.find(s => s.key === 'nextFixtureAwayTeamId')?.value || 'team-2';
+            const nextTime = dbSettings.find(s => s.key === 'nextFixtureTime')?.value || '20:00 GMT';
+            setNextFixtureHomeTeamId(home);
+            setNextFixtureAwayTeamId(away);
+            setNextFixtureTime(nextTime);
           }
         } catch (error) {
           console.error("Supabase load failed:", error);
@@ -164,6 +179,9 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
           if (data.photos) setPhotos(data.photos);
           if (data.liveLink) setLiveLink(data.liveLink);
           if (data.highlightsLink) setHighlightsLink(data.highlightsLink);
+          if (data.nextFixtureHomeTeamId) setNextFixtureHomeTeamId(data.nextFixtureHomeTeamId);
+          if (data.nextFixtureAwayTeamId) setNextFixtureAwayTeamId(data.nextFixtureAwayTeamId);
+          if (data.nextFixtureTime) setNextFixtureTime(data.nextFixtureTime);
         } catch (error) {
           console.error("Local SQLite load failed:", error);
         }
@@ -207,6 +225,33 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
       await supabase.from('Setting').upsert({ key: 'highlightsLink', value: url });
     } else {
       await mutateLocal('updateSetting', { key: 'highlightsLink', value: url });
+    }
+  };
+
+  const updateNextFixtureHomeTeamId = async (id: string) => {
+    setNextFixtureHomeTeamId(id);
+    if (supabase) {
+      await supabase.from('Setting').upsert({ key: 'nextFixtureHomeTeamId', value: id });
+    } else {
+      await mutateLocal('updateSetting', { key: 'nextFixtureHomeTeamId', value: id });
+    }
+  };
+
+  const updateNextFixtureAwayTeamId = async (id: string) => {
+    setNextFixtureAwayTeamId(id);
+    if (supabase) {
+      await supabase.from('Setting').upsert({ key: 'nextFixtureAwayTeamId', value: id });
+    } else {
+      await mutateLocal('updateSetting', { key: 'nextFixtureAwayTeamId', value: id });
+    }
+  };
+
+  const updateNextFixtureTime = async (time: string) => {
+    setNextFixtureTime(time);
+    if (supabase) {
+      await supabase.from('Setting').upsert({ key: 'nextFixtureTime', value: time });
+    } else {
+      await mutateLocal('updateSetting', { key: 'nextFixtureTime', value: time });
     }
   };
 
@@ -355,7 +400,10 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
       addPhoto, removePhoto,
       isAdmin, login, signup, logout,
       liveLink, updateLiveLink,
-      highlightsLink, updateHighlightsLink
+      highlightsLink, updateHighlightsLink,
+      nextFixtureHomeTeamId, updateNextFixtureHomeTeamId,
+      nextFixtureAwayTeamId, updateNextFixtureAwayTeamId,
+      nextFixtureTime, updateNextFixtureTime
     }}>
       {children}
     </TournamentContext.Provider>

@@ -5,11 +5,14 @@ import Link from 'next/link';
 import { useTournament } from '@/components/TournamentContext';
 
 export default function Home() {
-  const { liveLink, highlightsLink, matches, teams } = useTournament();
+  const { liveLink, highlightsLink, matches, teams, nextFixtureHomeTeamId, nextFixtureAwayTeamId, nextFixtureTime } = useTournament();
 
   const liveMatch = matches.find(m => m.status === 'LIVE');
   const liveHomeTeam = liveMatch ? teams.find(t => t.id === liveMatch.homeTeamId) : null;
   const liveAwayTeam = liveMatch ? teams.find(t => t.id === liveMatch.awayTeamId) : null;
+
+  const nextHomeTeam = teams.find(t => t.id === nextFixtureHomeTeamId);
+  const nextAwayTeam = teams.find(t => t.id === nextFixtureAwayTeamId);
 
   return (
     <main>
@@ -216,23 +219,33 @@ export default function Home() {
               <h3 className="headline-md" style={{ color: 'white', marginBottom: '24px' }}>NEXT FIXTURE</h3>
               
               <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '24px 0', borderTop: '1px solid rgba(255,255,255,0.1)', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                {/* Home Team */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                  <div style={{ width: '64px', height: '64px', background: 'var(--surface-container-highest)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
-                    <span className="material-symbols-outlined" style={{ fontSize: '40px', color: 'var(--primary)' }}>shield</span>
+                  <div style={{ width: '64px', height: '64px', background: 'var(--surface-container-highest)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)', padding: '8px' }}>
+                    {nextHomeTeam ? (
+                      <img src={nextHomeTeam.img} alt={nextHomeTeam.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    ) : (
+                      <span className="material-symbols-outlined" style={{ fontSize: '40px', color: 'var(--primary)' }}>shield</span>
+                    )}
                   </div>
-                  <span className="label-caps">DRAGONS</span>
+                  <span className="label-caps" style={{ textAlign: 'center' }}>{nextHomeTeam ? nextHomeTeam.name : 'HOME'}</span>
                 </div>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <span className="stats-md" style={{ color: 'var(--on-surface-variant)' }}>VS</span>
-                  <span className="label-caps" style={{ color: 'var(--secondary)' }}>20:00 GMT</span>
+                  <span className="label-caps" style={{ color: 'var(--secondary)', textAlign: 'center' }}>{nextFixtureTime || '20:00 GMT'}</span>
                 </div>
                 
+                {/* Away Team */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                  <div style={{ width: '64px', height: '64px', background: 'var(--surface-container-highest)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
-                    <span className="material-symbols-outlined" style={{ fontSize: '40px', color: 'white' }}>tsunami</span>
+                  <div style={{ width: '64px', height: '64px', background: 'var(--surface-container-highest)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)', padding: '8px' }}>
+                    {nextAwayTeam ? (
+                      <img src={nextAwayTeam.img} alt={nextAwayTeam.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    ) : (
+                      <span className="material-symbols-outlined" style={{ fontSize: '40px', color: 'white' }}>tsunami</span>
+                    )}
                   </div>
-                  <span className="label-caps">RAPTORS</span>
+                  <span className="label-caps" style={{ textAlign: 'center' }}>{nextAwayTeam ? nextAwayTeam.name : 'AWAY'}</span>
                 </div>
               </div>
             </div>
