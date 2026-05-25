@@ -70,12 +70,19 @@ function TeamsEditor() {
       <h2 className="headline-md" style={{ marginBottom: '24px' }}>Edit Teams</h2>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         {teams.map(team => (
-          <div key={team.id} style={{ display: 'flex', gap: '16px', background: 'var(--surface-container-high)', padding: '16px', alignItems: 'center' }}>
+          <div key={team.id} style={{ display: 'flex', gap: '16px', background: 'var(--surface-container-high)', padding: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
             <img src={team.img} alt={team.name} style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
             <input 
               value={team.name} 
               onChange={e => updateTeam(team.id, { name: e.target.value })}
+              placeholder="Team Name"
               style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 1 }}
+            />
+            <input 
+              value={team.img} 
+              onChange={e => updateTeam(team.id, { img: e.target.value })}
+              placeholder="Logo Image URL"
+              style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 1.5 }}
             />
             <input 
               value={team.rank} 
