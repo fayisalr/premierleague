@@ -10,7 +10,7 @@ export async function GET() {
     const photos = await prisma.photo.findMany();
     const settings = await prisma.setting.findMany();
 
-    const matches = rawMatches.map(m => {
+    const matches = rawMatches.map((m: any) => {
       const { possessionHome, possessionAway, shotsHome, shotsAway, foulsHome, foulsAway, ...rest } = m;
       const stats = (possessionHome !== null) ? {
         possessionHome, possessionAway, shotsHome, shotsAway, foulsHome, foulsAway
