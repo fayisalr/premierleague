@@ -456,7 +456,10 @@ function SettingsEditor() {
     teams,
     nextFixtureHomeTeamId, updateNextFixtureHomeTeamId,
     nextFixtureAwayTeamId, updateNextFixtureAwayTeamId,
-    nextFixtureTime, updateNextFixtureTime
+    nextFixtureTime, updateNextFixtureTime,
+    highlightsImage, updateHighlightsImage,
+    highlightsTitle, updateHighlightsTitle,
+    highlightsTime, updateHighlightsTime
   } = useTournament();
 
   const [localLiveLink, setLocalLiveLink] = useState(liveLink);
@@ -464,6 +467,9 @@ function SettingsEditor() {
   const [localHomeTeamId, setLocalHomeTeamId] = useState(nextFixtureHomeTeamId);
   const [localAwayTeamId, setLocalAwayTeamId] = useState(nextFixtureAwayTeamId);
   const [localTime, setLocalTime] = useState(nextFixtureTime);
+  const [localHighlightsImage, setLocalHighlightsImage] = useState(highlightsImage);
+  const [localHighlightsTitle, setLocalHighlightsTitle] = useState(highlightsTitle);
+  const [localHighlightsTime, setLocalHighlightsTime] = useState(highlightsTime);
   
   const [liveSaved, setLiveSaved] = useState(false);
   const [highlightsSaved, setHighlightsSaved] = useState(false);
@@ -490,6 +496,18 @@ function SettingsEditor() {
     setLocalTime(nextFixtureTime);
   }, [nextFixtureTime]);
 
+  React.useEffect(() => {
+    setLocalHighlightsImage(highlightsImage);
+  }, [highlightsImage]);
+
+  React.useEffect(() => {
+    setLocalHighlightsTitle(highlightsTitle);
+  }, [highlightsTitle]);
+
+  React.useEffect(() => {
+    setLocalHighlightsTime(highlightsTime);
+  }, [highlightsTime]);
+
   const handleSaveLive = (e: React.FormEvent) => {
     e.preventDefault();
     updateLiveLink(localLiveLink);
@@ -500,6 +518,9 @@ function SettingsEditor() {
   const handleSaveHighlights = (e: React.FormEvent) => {
     e.preventDefault();
     updateHighlightsLink(localHighlightsLink);
+    updateHighlightsImage(localHighlightsImage);
+    updateHighlightsTitle(localHighlightsTitle);
+    updateHighlightsTime(localHighlightsTime);
     setHighlightsSaved(true);
     setTimeout(() => setHighlightsSaved(false), 3000);
   };
@@ -579,6 +600,76 @@ function SettingsEditor() {
           </p>
         </div>
 
+        {/* Match Highlights Settings */}
+        <div style={{ background: 'var(--surface-container-high)', padding: '24px', border: '1px solid var(--outline-variant)' }}>
+          <h3 className="label-caps" style={{ color: 'var(--on-surface-variant)', marginBottom: '16px' }}>Match Highlights Settings</h3>
+          <form onSubmit={handleSaveHighlights} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+              {/* Highlights Video Link */}
+              <div style={{ flex: 1, minWidth: '250px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label className="label-caps" style={{ color: 'var(--on-surface-variant)', fontSize: '10px' }}>Highlights Video URL</label>
+                <input 
+                  type="url"
+                  value={localHighlightsLink}
+                  onChange={e => { setLocalHighlightsLink(e.target.value); setHighlightsSaved(false); }}
+                  placeholder="e.g. https://youtube.com/watch?v=..."
+                  style={{ width: '100%', background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '12px' }}
+                />
+              </div>
+
+              {/* Cover Photo Image URL */}
+              <div style={{ flex: 1, minWidth: '250px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label className="label-caps" style={{ color: 'var(--on-surface-variant)', fontSize: '10px' }}>Cover Photo URL</label>
+                <input 
+                  type="url"
+                  value={localHighlightsImage}
+                  onChange={e => { setLocalHighlightsImage(e.target.value); setHighlightsSaved(false); }}
+                  placeholder="e.g. https://images.unsplash.com/..."
+                  style={{ width: '100%', background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '12px' }}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+              {/* Title / Headline */}
+              <div style={{ flex: 2, minWidth: '250px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label className="label-caps" style={{ color: 'var(--on-surface-variant)', fontSize: '10px' }}>Headline / Title</label>
+                <input 
+                  type="text"
+                  value={localHighlightsTitle}
+                  onChange={e => { setLocalHighlightsTitle(e.target.value); setHighlightsSaved(false); }}
+                  placeholder="e.g. RAPTORS CRUSH DEFENSE IN 5-0 SWEEP"
+                  style={{ width: '100%', background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '12px' }}
+                />
+              </div>
+
+              {/* Time Stamp / Elapsed Time */}
+              <div style={{ flex: 1, minWidth: '150px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label className="label-caps" style={{ color: 'var(--on-surface-variant)', fontSize: '10px' }}>Elapsed Time / Badge</label>
+                <input 
+                  type="text"
+                  value={localHighlightsTime}
+                  onChange={e => { setLocalHighlightsTime(e.target.value); setHighlightsSaved(false); }}
+                  placeholder="e.g. 2 HOURS AGO"
+                  style={{ width: '100%', background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '12px' }}
+                />
+              </div>
+            </div>
+
+            <button 
+              type="submit"
+              className="label-caps"
+              style={{ alignSelf: 'flex-start', background: highlightsSaved ? 'var(--tertiary)' : 'var(--on-tertiary)', color: highlightsSaved ? 'var(--on-tertiary)' : 'var(--on-primary)', border: 'none', padding: '12px 24px', cursor: 'pointer', whiteSpace: 'nowrap', marginTop: '8px' }}
+            >
+              {highlightsSaved ? 'Saved ✓' : 'Save Highlights Settings'}
+            </button>
+          </form>
+          <p className="body-sm" style={{ color: 'var(--on-surface-variant)', marginTop: '8px' }}>
+            Sets the background photo, video link, header title, and elapsed time label on the homepage highlights card.
+          </p>
+        </div>
+
         {/* Live Stream URL */}
         <div style={{ background: 'var(--surface-container-high)', padding: '24px', border: '1px solid var(--outline-variant)' }}>
           <h3 className="label-caps" style={{ color: 'var(--on-surface-variant)', marginBottom: '16px' }}>Live Stream URL</h3>
@@ -600,30 +691,6 @@ function SettingsEditor() {
           </form>
           <p className="body-sm" style={{ color: 'var(--on-surface-variant)', marginTop: '8px' }}>
             When this URL is set, the "WATCH LIVE NOW" button on the home page will direct users to this link.
-          </p>
-        </div>
-
-        {/* Highlights URL */}
-        <div style={{ background: 'var(--surface-container-high)', padding: '24px', border: '1px solid var(--outline-variant)' }}>
-          <h3 className="label-caps" style={{ color: 'var(--on-surface-variant)', marginBottom: '16px' }}>Highlights Video URL</h3>
-          <form onSubmit={handleSaveHighlights} style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-            <input 
-              type="url"
-              value={localHighlightsLink}
-              onChange={e => { setLocalHighlightsLink(e.target.value); setHighlightsSaved(false); }}
-              placeholder="e.g. https://youtube.com/watch?v=..."
-              style={{ flex: 1, background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '12px' }}
-            />
-            <button 
-              type="submit"
-              className="label-caps"
-              style={{ background: highlightsSaved ? 'var(--tertiary)' : 'var(--primary)', color: highlightsSaved ? 'var(--on-tertiary)' : 'var(--on-primary)', border: 'none', padding: '12px 24px', cursor: 'pointer', whiteSpace: 'nowrap' }}
-            >
-              {highlightsSaved ? 'Saved ✓' : 'Save Link'}
-            </button>
-          </form>
-          <p className="body-sm" style={{ color: 'var(--on-surface-variant)', marginTop: '8px' }}>
-            When this URL is set, the "PLAY HIGHLIGHTS" button on the home page will direct users to this video.
           </p>
         </div>
 

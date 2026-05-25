@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useTournament } from '@/components/TournamentContext';
 
 export default function Home() {
-  const { liveLink, highlightsLink, matches, teams, nextFixtureHomeTeamId, nextFixtureAwayTeamId, nextFixtureTime } = useTournament();
+  const { liveLink, highlightsLink, matches, teams, nextFixtureHomeTeamId, nextFixtureAwayTeamId, nextFixtureTime, highlightsImage, highlightsTitle, highlightsTime } = useTournament();
 
   const liveMatch = matches.find(m => m.status === 'LIVE');
   const liveHomeTeam = liveMatch ? teams.find(t => t.id === liveMatch.homeTeamId) : null;
@@ -100,7 +100,7 @@ export default function Home() {
             alignItems: 'flex-end'
           }}>
             <img 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMZ-K6cadPRa3uq-9tTAOYG_Uqr6xxdPOGda23evycGTXThFB0qO4HOLt2dFnpbAzer1Om-Un1XmLNGskJTxXcowaM2MDZHamjRvhwMwPcvRFQYClIpiDLfBJGy19xPA4YXw0HqdbDPKkidOS0T2lcNZ2vUKjBjTew5Ymi6vJ1IG0d7Fv8NCGqedUsvve296pwNvQSwKFroGucm2T-YrsHBK0BiJ6yD-4Ffml6uOUkF5gJBXwm9pzsU7nWWogizL6IaAMtxhLA_Sg"
+              src={highlightsImage || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=800"}
               alt="Match Highlights"
               style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
             />
@@ -108,9 +108,9 @@ export default function Home() {
             <div style={{ position: 'relative', padding: '32px', width: '100%', zIndex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                 <span className="label-caps" style={{ background: 'var(--primary)', color: 'var(--on-primary)', padding: '2px 8px' }}>MATCH HIGHLIGHTS</span>
-                <span className="label-caps" style={{ color: 'var(--on-surface-variant)' }}>2 HOURS AGO</span>
+                <span className="label-caps" style={{ color: 'var(--on-surface-variant)' }}>{highlightsTime || '2 HOURS AGO'}</span>
               </div>
-              <h2 className="headline-md" style={{ color: 'white', marginBottom: '16px' }}>RAPTORS CRUSH DEFENSE IN 5-0 SWEEP</h2>
+              <h2 className="headline-md" style={{ color: 'white', marginBottom: '16px' }}>{highlightsTitle || 'RAPTORS CRUSH DEFENSE IN 5-0 SWEEP'}</h2>
               <a href={highlightsLink || "#"} target={highlightsLink ? "_blank" : undefined} style={{
                 background: 'rgba(255, 255, 255, 0.1)',
                 backdropFilter: 'blur(10px)',

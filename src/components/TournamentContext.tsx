@@ -89,6 +89,12 @@ interface TournamentContextType {
   updateNextFixtureAwayTeamId: (id: string) => void;
   nextFixtureTime: string;
   updateNextFixtureTime: (time: string) => void;
+  highlightsImage: string;
+  updateHighlightsImage: (url: string) => void;
+  highlightsTitle: string;
+  updateHighlightsTitle: (title: string) => void;
+  highlightsTime: string;
+  updateHighlightsTime: (time: string) => void;
 }
 
 const TournamentContext = createContext<TournamentContextType | undefined>(undefined);
@@ -106,6 +112,9 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
   const [nextFixtureHomeTeamId, setNextFixtureHomeTeamId] = useState('team-3');
   const [nextFixtureAwayTeamId, setNextFixtureAwayTeamId] = useState('team-2');
   const [nextFixtureTime, setNextFixtureTime] = useState('20:00 GMT');
+  const [highlightsImage, setHighlightsImage] = useState('https://lh3.googleusercontent.com/aida-public/AB6AXuAMZ-K6cadPRa3uq-9tTAOYG_Uqr6xxdPOGda23evycGTXThFB0qO4HOLt2dFnpbAzer1Om-Un1XmLNGskJTxXcowaM2MDZHamjRvhwMwPcvRFQYClIpiDLfBJGy19xPA4YXw0HqdbDPKkidOS0T2lcNZ2vUKjBjTew5Ymi6vJ1IG0d7Fv8NCGqedUsvve296pwNvQSwKFroGucm2T-YrsHBK0BiJ6yD-4Ffml6uOUkF5gJBXwm9pzsU7nWWogizL6IaAMtxhLA_Sg');
+  const [highlightsTitle, setHighlightsTitle] = useState('RAPTORS CRUSH DEFENSE IN 5-0 SWEEP');
+  const [highlightsTime, setHighlightsTime] = useState('2 HOURS AGO');
 
   const supabase = createClient();
 
@@ -160,6 +169,12 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
             setNextFixtureHomeTeamId(home);
             setNextFixtureAwayTeamId(away);
             setNextFixtureTime(nextTime);
+            const hlImg = dbSettings.find(s => s.key === 'highlightsImage')?.value || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAMZ-K6cadPRa3uq-9tTAOYG_Uqr6xxdPOGda23evycGTXThFB0qO4HOLt2dFnpbAzer1Om-Un1XmLNGskJTxXcowaM2MDZHamjRvhwMwPcvRFQYClIpiDLfBJGy19xPA4YXw0HqdbDPKkidOS0T2lcNZ2vUKjBjTew5Ymi6vJ1IG0d7Fv8NCGqedUsvve296pwNvQSwKFroGucm2T-YrsHBK0BiJ6yD-4Ffml6uOUkF5gJBXwm9pzsU7nWWogizL6IaAMtxhLA_Sg';
+            const hlTitle = dbSettings.find(s => s.key === 'highlightsTitle')?.value || 'RAPTORS CRUSH DEFENSE IN 5-0 SWEEP';
+            const hlTime = dbSettings.find(s => s.key === 'highlightsTime')?.value || '2 HOURS AGO';
+            setHighlightsImage(hlImg);
+            setHighlightsTitle(hlTitle);
+            setHighlightsTime(hlTime);
           }
         } catch (error) {
           console.error("Supabase load failed:", error);
@@ -182,6 +197,9 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
           if (data.nextFixtureHomeTeamId) setNextFixtureHomeTeamId(data.nextFixtureHomeTeamId);
           if (data.nextFixtureAwayTeamId) setNextFixtureAwayTeamId(data.nextFixtureAwayTeamId);
           if (data.nextFixtureTime) setNextFixtureTime(data.nextFixtureTime);
+          if (data.highlightsImage) setHighlightsImage(data.highlightsImage);
+          if (data.highlightsTitle) setHighlightsTitle(data.highlightsTitle);
+          if (data.highlightsTime) setHighlightsTime(data.highlightsTime);
         } catch (error) {
           console.error("Local SQLite load failed:", error);
         }
@@ -252,6 +270,33 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
       await supabase.from('Setting').upsert({ key: 'nextFixtureTime', value: time });
     } else {
       await mutateLocal('updateSetting', { key: 'nextFixtureTime', value: time });
+    }
+  };
+
+  const updateHighlightsImage = async (url: string) => {
+    setHighlightsImage(url);
+    if (supabase) {
+      await supabase.from('Setting').upsert({ key: 'highlightsImage', value: url });
+    } else {
+      await mutateLocal('updateSetting', { key: 'highlightsImage', value: url });
+    }
+  };
+
+  const updateHighlightsTitle = async (title: string) => {
+    setHighlightsTitle(title);
+    if (supabase) {
+      await supabase.from('Setting').upsert({ key: 'highlightsTitle', value: title });
+    } else {
+      await mutateLocal('updateSetting', { key: 'highlightsTitle', value: title });
+    }
+  };
+
+  const updateHighlightsTime = async (time: string) => {
+    setHighlightsTime(time);
+    if (supabase) {
+      await supabase.from('Setting').upsert({ key: 'highlightsTime', value: time });
+    } else {
+      await mutateLocal('updateSetting', { key: 'highlightsTime', value: time });
     }
   };
 
@@ -403,7 +448,10 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
       highlightsLink, updateHighlightsLink,
       nextFixtureHomeTeamId, updateNextFixtureHomeTeamId,
       nextFixtureAwayTeamId, updateNextFixtureAwayTeamId,
-      nextFixtureTime, updateNextFixtureTime
+      nextFixtureTime, updateNextFixtureTime,
+      highlightsImage, updateHighlightsImage,
+      highlightsTitle, updateHighlightsTitle,
+      highlightsTime, updateHighlightsTime
     }}>
       {children}
     </TournamentContext.Provider>
