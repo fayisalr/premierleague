@@ -62,6 +62,41 @@ export default function AdminDashboard() {
   );
 }
 
+function GooglePhotosTip() {
+  return (
+    <div style={{
+      background: 'rgba(245, 158, 11, 0.1)',
+      border: '1px solid #f59e0b',
+      borderRadius: '8px',
+      padding: '16px',
+      marginTop: '12px',
+      marginBottom: '12px',
+      color: '#fef3c7',
+      fontSize: '14px',
+      lineHeight: '1.6',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '8px',
+      width: '100%',
+      boxSizing: 'border-box'
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold', color: '#fbbf24' }}>
+        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>warning</span>
+        <span>Google Photos Link Detected</span>
+      </div>
+      <p style={{ margin: 0 }}>
+        Standard sharing links (e.g., <code>photos.app.goo.gl</code>) cannot be displayed directly as images. 
+        Please follow these simple steps to get the direct image URL instead:
+      </p>
+      <ol style={{ margin: '4px 0 0 20px', padding: 0 }}>
+        <li>Open your Google Photos sharing link in a new browser tab.</li>
+        <li><strong>Right-click</strong> the image (or long-press on mobile) and select <strong>"Copy Image Address"</strong> (or "Copy Image Link").</li>
+        <li>Paste that copied address here (it will start with <code>https://lh3.googleusercontent.com/...</code>).</li>
+      </ol>
+    </div>
+  );
+}
+
 function TeamsEditor() {
   const { teams, updateTeam } = useTournament();
   
@@ -70,38 +105,43 @@ function TeamsEditor() {
       <h2 className="headline-md" style={{ marginBottom: '24px' }}>Edit Teams</h2>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         {teams.map(team => (
-          <div key={team.id} style={{ display: 'flex', gap: '16px', background: 'var(--surface-container-high)', padding: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
-            <img src={team.img} alt={team.name} style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
-            <input 
-              value={team.name} 
-              onChange={e => updateTeam(team.id, { name: e.target.value })}
-              placeholder="Team Name"
-              style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 1 }}
-            />
-            <input 
-              value={team.img} 
-              onChange={e => updateTeam(team.id, { img: e.target.value })}
-              placeholder="Logo Image URL"
-              style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 1.5 }}
-            />
-            <input 
-              value={team.rank} 
-              onChange={e => updateTeam(team.id, { rank: e.target.value })}
-              style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', width: '80px' }}
-              placeholder="Rank"
-            />
-            <input 
-              value={team.winRate} 
-              onChange={e => updateTeam(team.id, { winRate: e.target.value })}
-              style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', width: '100px' }}
-              placeholder="Win Rate"
-            />
-            <input 
-              value={team.color} 
-              onChange={e => updateTeam(team.id, { color: e.target.value })}
-              style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', width: '150px' }}
-              placeholder="Color"
-            />
+          <div key={team.id} style={{ display: 'flex', flexDirection: 'column', background: 'var(--surface-container-high)', padding: '16px', gap: '16px' }}>
+            <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap', width: '100%' }}>
+              <img src={team.img} alt={team.name} style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
+              <input 
+                value={team.name} 
+                onChange={e => updateTeam(team.id, { name: e.target.value })}
+                placeholder="Team Name"
+                style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 1 }}
+              />
+              <input 
+                value={team.img} 
+                onChange={e => updateTeam(team.id, { img: e.target.value })}
+                placeholder="Logo Image URL"
+                style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 1.5 }}
+              />
+              <input 
+                value={team.rank} 
+                onChange={e => updateTeam(team.id, { rank: e.target.value })}
+                style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', width: '80px' }}
+                placeholder="Rank"
+              />
+              <input 
+                value={team.winRate} 
+                onChange={e => updateTeam(team.id, { winRate: e.target.value })}
+                style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', width: '100px' }}
+                placeholder="Win Rate"
+              />
+              <input 
+                value={team.color} 
+                onChange={e => updateTeam(team.id, { color: e.target.value })}
+                style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', width: '150px' }}
+                placeholder="Color"
+              />
+            </div>
+            { (team.img.includes('photos.app.goo.gl') || (team.img.includes('photos.google.com') && !team.img.includes('lh3.googleusercontent.com'))) && (
+              <GooglePhotosTip />
+            )}
           </div>
         ))}
       </div>
@@ -120,6 +160,17 @@ function PlayersEditor() {
     number: ''
   });
 
+  const [showPlayerPhotosTip, setShowPlayerPhotosTip] = useState(false);
+
+  const handlePlayerUrlChange = (url: string) => {
+    setNewPlayer({...newPlayer, imageUrl: url});
+    if (url.includes('photos.app.goo.gl') || (url.includes('photos.google.com') && !url.includes('lh3.googleusercontent.com'))) {
+      setShowPlayerPhotosTip(true);
+    } else {
+      setShowPlayerPhotosTip(false);
+    }
+  };
+
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newPlayer.name || !newPlayer.teamId) return;
@@ -136,6 +187,7 @@ function PlayersEditor() {
       teamId: teams[0]?.id || '',
       number: ''
     });
+    setShowPlayerPhotosTip(false);
   };
 
   return (
@@ -143,83 +195,99 @@ function PlayersEditor() {
       <h2 className="headline-md" style={{ marginBottom: '24px' }}>Manage Players</h2>
       
       {/* Add New Player Form */}
-      <form onSubmit={handleAddSubmit} style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', background: 'var(--surface-container-high)', padding: '16px', marginBottom: '32px', border: '1px solid var(--primary)' }}>
-        <input 
-          type="text" 
-          value={newPlayer.name} 
-          onChange={e => setNewPlayer({...newPlayer, name: e.target.value})}
-          placeholder="New Player Name"
-          required
-          style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 1, minWidth: '150px' }}
-        />
-        <input 
-          type="text" 
-          value={newPlayer.imageUrl} 
-          onChange={e => setNewPlayer({...newPlayer, imageUrl: e.target.value})}
-          placeholder="Photo URL (Optional)"
-          style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 1, minWidth: '150px' }}
-        />
-        <select 
-          value={newPlayer.teamId} 
-          onChange={e => setNewPlayer({...newPlayer, teamId: e.target.value})}
-          required
-          style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px' }}
-        >
-          {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-        </select>
-        <select 
-          value={newPlayer.position} 
-          onChange={e => setNewPlayer({...newPlayer, position: e.target.value})}
-          style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px' }}
-        >
-          <option>Forward</option>
-          <option>Midfielder</option>
-          <option>Defender</option>
-          <option>Goalkeeper</option>
-        </select>
-        <input 
-          type="number" 
-          value={newPlayer.number} 
-          onChange={e => setNewPlayer({...newPlayer, number: e.target.value})}
-          placeholder="Kit #"
-          style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', width: '80px' }}
-        />
-        <button 
-          type="submit"
-          style={{ background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', padding: '8px 16px', cursor: 'pointer' }}
-          className="label-caps"
-        >
-          Add
-        </button>
+      <form onSubmit={handleAddSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', background: 'var(--surface-container-high)', padding: '16px', marginBottom: '32px', border: '1px solid var(--primary)' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', width: '100%' }}>
+          <input 
+            type="text" 
+            value={newPlayer.name} 
+            onChange={e => setNewPlayer({...newPlayer, name: e.target.value})}
+            placeholder="New Player Name"
+            required
+            style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 1, minWidth: '150px' }}
+          />
+          <input 
+            type="text" 
+            value={newPlayer.imageUrl} 
+            onChange={e => handlePlayerUrlChange(e.target.value)}
+            placeholder="Photo URL (Optional)"
+            style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 1, minWidth: '150px' }}
+          />
+          <select 
+            value={newPlayer.teamId} 
+            onChange={e => setNewPlayer({...newPlayer, teamId: e.target.value})}
+            required
+            style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px' }}
+          >
+            {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+          </select>
+          <select 
+            value={newPlayer.position} 
+            onChange={e => setNewPlayer({...newPlayer, position: e.target.value})}
+            style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px' }}
+          >
+            <option>Forward</option>
+            <option>Midfielder</option>
+            <option>Defender</option>
+            <option>Goalkeeper</option>
+          </select>
+          <input 
+            type="number" 
+            value={newPlayer.number} 
+            onChange={e => setNewPlayer({...newPlayer, number: e.target.value})}
+            placeholder="Kit #"
+            style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', width: '80px' }}
+          />
+          <button 
+            type="submit"
+            style={{ background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', padding: '8px 16px', cursor: 'pointer' }}
+            className="label-caps"
+          >
+            Add
+          </button>
+        </div>
+        {showPlayerPhotosTip && <GooglePhotosTip />}
       </form>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {players.map(player => (
-          <div key={player.id} style={{ display: 'flex', gap: '16px', background: 'var(--surface-container-high)', padding: '16px', alignItems: 'center' }}>
-            <img src={player.imageUrl} alt={player.name} style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '50%' }} />
-            <input 
-              value={player.name} 
-              onChange={e => updatePlayer(player.id, { name: e.target.value })}
-              style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 1 }}
-            />
-            <select 
-              value={player.teamId} 
-              onChange={e => updatePlayer(player.id, { teamId: e.target.value })}
-              style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px' }}
-            >
-              {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-            </select>
-            <input 
-              value={player.number} 
-              onChange={e => updatePlayer(player.id, { number: e.target.value })}
-              style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', width: '80px' }}
-            />
-            <button 
-              onClick={() => removePlayer(player.id)}
-              style={{ background: 'var(--error)', color: 'var(--on-error)', border: 'none', padding: '8px 16px', cursor: 'pointer' }}
-            >
-              Delete
-            </button>
+          <div key={player.id} style={{ display: 'flex', flexDirection: 'column', background: 'var(--surface-container-high)', padding: '16px', gap: '16px' }}>
+            <div style={{ display: 'flex', gap: '16px', alignItems: 'center', width: '100%', flexWrap: 'wrap' }}>
+              <img src={player.imageUrl} alt={player.name} style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '50%' }} />
+              <input 
+                value={player.name} 
+                onChange={e => updatePlayer(player.id, { name: e.target.value })}
+                style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 1, minWidth: '150px' }}
+                placeholder="Player Name"
+              />
+              <input 
+                value={player.imageUrl} 
+                onChange={e => updatePlayer(player.id, { imageUrl: e.target.value })}
+                style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 1.5, minWidth: '200px' }}
+                placeholder="Photo URL"
+              />
+              <select 
+                value={player.teamId} 
+                onChange={e => updatePlayer(player.id, { teamId: e.target.value })}
+                style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px' }}
+              >
+                {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+              </select>
+              <input 
+                value={player.number} 
+                onChange={e => updatePlayer(player.id, { number: e.target.value })}
+                style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', width: '80px' }}
+                placeholder="Kit #"
+              />
+              <button 
+                onClick={() => removePlayer(player.id)}
+                style={{ background: 'var(--error)', color: 'var(--on-error)', border: 'none', padding: '8px 16px', cursor: 'pointer' }}
+              >
+                Delete
+              </button>
+            </div>
+            { (player.imageUrl.includes('photos.app.goo.gl') || (player.imageUrl.includes('photos.google.com') && !player.imageUrl.includes('lh3.googleusercontent.com'))) && (
+              <GooglePhotosTip />
+            )}
           </div>
         ))}
       </div>
@@ -398,41 +466,56 @@ function GalleryEditor() {
   const [newUrl, setNewUrl] = useState('');
   const [newCaption, setNewCaption] = useState('');
 
+  const [showPhotosTip, setShowPhotosTip] = useState(false);
+
+  const handleUrlChange = (url: string) => {
+    setNewUrl(url);
+    if (url.includes('photos.app.goo.gl') || (url.includes('photos.google.com') && !url.includes('lh3.googleusercontent.com'))) {
+      setShowPhotosTip(true);
+    } else {
+      setShowPhotosTip(false);
+    }
+  };
+
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newUrl) return;
     addPhoto({ url: newUrl, caption: newCaption });
     setNewUrl('');
     setNewCaption('');
+    setShowPhotosTip(false);
   };
 
   return (
     <div>
       <h2 className="headline-md" style={{ marginBottom: '24px' }}>Manage Gallery</h2>
       
-      <form onSubmit={handleAddSubmit} style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', background: 'var(--surface-container-high)', padding: '16px', marginBottom: '32px', border: '1px solid var(--primary)' }}>
-        <input 
-          type="url" 
-          value={newUrl} 
-          onChange={e => setNewUrl(e.target.value)}
-          placeholder="Image URL (e.g. https://...)"
-          required
-          style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 2, minWidth: '200px' }}
-        />
-        <input 
-          type="text" 
-          value={newCaption} 
-          onChange={e => setNewCaption(e.target.value)}
-          placeholder="Caption (Optional)"
-          style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 1, minWidth: '150px' }}
-        />
-        <button 
-          type="submit"
-          style={{ background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', padding: '8px 16px', cursor: 'pointer' }}
-          className="label-caps"
-        >
-          Add Photo
-        </button>
+      <form onSubmit={handleAddSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', background: 'var(--surface-container-high)', padding: '16px', marginBottom: '32px', border: '1px solid var(--primary)' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', width: '100%' }}>
+          <input 
+            type="url" 
+            value={newUrl} 
+            onChange={e => handleUrlChange(e.target.value)}
+            placeholder="Image URL (e.g. https://...)"
+            required
+            style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 2, minWidth: '200px' }}
+          />
+          <input 
+            type="text" 
+            value={newCaption} 
+            onChange={e => setNewCaption(e.target.value)}
+            placeholder="Caption (Optional)"
+            style={{ background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '8px', flex: 1, minWidth: '150px' }}
+          />
+          <button 
+            type="submit"
+            style={{ background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', padding: '8px 16px', cursor: 'pointer' }}
+            className="label-caps"
+          >
+            Add Photo
+          </button>
+        </div>
+        {showPhotosTip && <GooglePhotosTip />}
       </form>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '24px' }}>
@@ -482,6 +565,8 @@ function SettingsEditor() {
   const [highlightsSaved, setHighlightsSaved] = useState(false);
   const [fixtureSaved, setFixtureSaved] = useState(false);
 
+  const [showHighlightsTip, setShowHighlightsTip] = useState(false);
+
   // Sync state when context values load
   React.useEffect(() => {
     setLocalLiveLink(liveLink);
@@ -505,6 +590,11 @@ function SettingsEditor() {
 
   React.useEffect(() => {
     setLocalHighlightsImage(highlightsImage);
+    if (highlightsImage && (highlightsImage.includes('photos.app.goo.gl') || (highlightsImage.includes('photos.google.com') && !highlightsImage.includes('lh3.googleusercontent.com')))) {
+      setShowHighlightsTip(true);
+    } else {
+      setShowHighlightsTip(false);
+    }
   }, [highlightsImage]);
 
   React.useEffect(() => {
@@ -539,6 +629,16 @@ function SettingsEditor() {
     updateNextFixtureTime(localTime);
     setFixtureSaved(true);
     setTimeout(() => setFixtureSaved(false), 3000);
+  };
+
+  const handleHighlightsImageChange = (url: string) => {
+    setLocalHighlightsImage(url);
+    setHighlightsSaved(false);
+    if (url.includes('photos.app.goo.gl') || (url.includes('photos.google.com') && !url.includes('lh3.googleusercontent.com'))) {
+      setShowHighlightsTip(true);
+    } else {
+      setShowHighlightsTip(false);
+    }
   };
 
   return (
@@ -631,12 +731,14 @@ function SettingsEditor() {
                 <input 
                   type="url"
                   value={localHighlightsImage}
-                  onChange={e => { setLocalHighlightsImage(e.target.value); setHighlightsSaved(false); }}
+                  onChange={e => handleHighlightsImageChange(e.target.value)}
                   placeholder="e.g. https://images.unsplash.com/..."
                   style={{ width: '100%', background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', color: 'var(--on-surface)', padding: '12px' }}
                 />
               </div>
             </div>
+
+            {showHighlightsTip && <GooglePhotosTip />}
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
               {/* Title / Headline */}
