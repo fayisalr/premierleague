@@ -18,8 +18,8 @@ export async function GET() {
       return { ...rest, stats };
     });
 
-    const liveLink = settings.find(s => s.key === 'liveLink')?.value || '';
-    const highlightsLink = settings.find(s => s.key === 'highlightsLink')?.value || '';
+    const liveLink = settings.find((s: any) => s.key === 'liveLink')?.value || '';
+    const highlightsLink = settings.find((s: any) => s.key === 'highlightsLink')?.value || '';
 
     return NextResponse.json({
       teams,
